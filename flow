@@ -1,0 +1,19 @@
+YouTube Transcript
+        ↓
+Chunking
+        ↓
+Embeddings
+        ↓
+Chroma Storage
+        ↓
+User Question
+        ↓
+Query Embedding
+        ↓
+Similarity Search
+        ↓
+Top-k Relevant Chunks
+        ↓
+LLM
+        ↓
+Final Answer

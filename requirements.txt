@@ -1,0 +1,14 @@
+youtube-transcript-api
+google-api-python-client
+python-dotenv
+streamlit
+langchain-core
+langchain-chroma
+langchain_text_splitters
+langchain-community
+chromadb
+huggingface_hub
+langchain
+sentence-transformers
+torch
+google-genai

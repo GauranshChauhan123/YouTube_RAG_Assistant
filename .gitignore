@@ -1,0 +1,37 @@
+# Secrets and local config
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Streamlit and logs
+.streamlit/secrets.toml
+*.log
+streamlit.out.log
+streamlit.err.log
+
+# Generated vector stores / local data
+chroma_db/
+
+# Jupyter
+.ipynb_checkpoints
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
