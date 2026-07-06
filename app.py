@@ -131,11 +131,15 @@ if ask_clicked:
         from llm import generate_result
         from retrieve import retrieve_related_info
 
-        relevant_docs = retrieve_related_info(
-            query=query.strip(),
-            video_id=active_video_id,
-        )
-        answer = generate_result(query.strip(), relevant_docs)
+        try:
+            relevant_docs = retrieve_related_info(
+                query=query.strip(),
+                video_id=active_video_id,
+            )
+            answer = generate_result(query.strip(), relevant_docs)
+        except Exception as exc:
+            st.error(str(exc))
+            st.stop()
 
     st.subheader("Answer")
     st.write(answer)
