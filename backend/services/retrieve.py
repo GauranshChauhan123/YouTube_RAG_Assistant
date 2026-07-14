@@ -1,5 +1,5 @@
 from langchain_chroma import Chroma
-from utils import get_embedding_model
+from backend.utils.embedding_model import get_embedding_model
 
 
 def retrieve_related_info(query: str, video_id: str, k: int = 5):

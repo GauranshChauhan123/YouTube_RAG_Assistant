@@ -1,6 +1,6 @@
 from google import genai
 from google.genai import errors as genai_errors
-from prompt import prompt_template
+from backend.services.prompt import prompt_template
 from dotenv import load_dotenv
 import os
 

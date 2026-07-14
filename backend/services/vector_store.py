@@ -1,4 +1,4 @@
-from utils import get_embedding_model
+from backend.utils.embedding_model import get_embedding_model
 from langchain_chroma import Chroma
 
 

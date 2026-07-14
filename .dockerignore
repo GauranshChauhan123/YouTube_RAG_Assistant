@@ -12,7 +12,7 @@ env
 .env.*
 !.env.example
 
-chroma_db
+chroma_db/
 
 .streamlit/secrets.toml
 *.log
@@ -20,4 +20,4 @@ chroma_db
 .vscode
 .idea
 Dockerfile
-dockerfile
+
