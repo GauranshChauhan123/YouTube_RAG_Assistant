@@ -22,44 +22,33 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Verify Python Version
-        run: python --version
-
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
 
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: Start FastAPI Server
-        run: |
-          uvicorn backend.main:app --host 127.0.0.1 --port 8000 &
-          sleep 10
+      - name: Start Docker Compose
+        run: docker compose up --build -d
 
-      - name: Test Health Endpoint
+      - name: Wait for FastAPI
         run: |
-          curl --fail http://127.0.0.1:8000/rag/health
+          timeout 60 bash -c '
+            until curl -fs http://127.0.0.1:8000/rag/health; do
+              echo "Waiting for FastAPI..."
+              sleep 2
+            done
+          '
 
-      - name: Start Streamlit
+      - name: Wait for Streamlit
         run: |
-          streamlit run frontend/app.py --server.headless true --server.port 8501 &
-          sleep 10
+          timeout 60 bash -c '
+            until curl -fs http://127.0.0.1:8501; do
+              echo "Waiting for Streamlit..."
+              sleep 2
+            done
+          '
 
-      - name: Test Streamlit
-        run: |
-          curl --fail http://127.0.0.1:8501
-
-
-      - name: Build Backend Docker Image
-        run: |
-          docker build \
-            -f backend/Dockerfile \
-            -t yt-rag-backend:latest \
-            .
-
-      - name: Build Frontend Docker Image
-        run: |
-          docker build \
-            -f frontend/Dockerfile \
-            -t yt-rag-frontend:latest \
-            .
+      - name: Stop Docker Compose
+        if: always()
+        run: docker compose down
