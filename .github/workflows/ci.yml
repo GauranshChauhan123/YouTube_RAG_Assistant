@@ -28,6 +28,32 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
+      - name: Create .env file
+        shell: bash
+        run: |
+          if [ -z "${{ secrets.GOOGLE_API_KEY }}" ]; then
+            echo "GOOGLE_API_KEY secret is missing!"
+            exit 1
+          fi
+
+          echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" > .env
+
+      - name: Verify .env file
+        run: |
+          pwd
+          ls -la
+
+          if [ -f .env ]; then
+            echo "✅ .env file exists"
+            cat .env | sed 's/=.*/=***/'
+          else
+            echo "❌ .env file does NOT exist"
+            exit 1
+          fi
+
+      - name: Docker Compose Version
+        run: docker compose version
+
       - name: Start Docker Compose
         run: docker compose up --build -d
 
@@ -48,6 +74,10 @@ jobs:
               sleep 2
             done
           '
+
+      - name: Show Docker Logs
+        if: failure()
+        run: docker compose logs
 
       - name: Stop Docker Compose
         if: always()
