@@ -1,69 +1,280 @@
-# YouTube RAG Assistant
+# 🎥 YouTube RAG Assistant
 
-A Streamlit app that lets you ask questions about a YouTube video using its transcript/captions. The app fetches the selected transcript language, chunks the transcript, stores embeddings in Chroma, retrieves relevant context, and uses Gemini to generate an answer.
+A Retrieval-Augmented Generation (RAG) application that allows users to ask questions about any YouTube video. The application extracts the video's transcript, retrieves the most relevant context using semantic search, and generates accurate answers using Google's Gemini model.
 
-## Features
+---
 
-- Accepts a YouTube URL or video ID.
-- Lets users select the transcript/captions language.
-- Builds a local Chroma vector store from the transcript.
-- Answers questions using retrieved transcript context.
-- Keeps retrieved chunks hidden from the answer UI.
+## 🚀 Features
 
-## Setup
+- 🎥 Accepts any public YouTube video URL
+- 📝 Retrieves video transcripts
+- 🌍 Supports multiple transcript languages
+- ✂️ Splits transcripts into semantic chunks
+- 🔍 Context retrieval using ChromaDB and MMR
+- 🤖 Answer generation using Gemini 2.5 Flash
+- ⚡ FastAPI backend
+- 🎨 Streamlit frontend
+- 🐳 Dockerized application
+- 🔄 GitHub Actions CI/CD pipeline
+- 📦 Automatic Docker Hub image publishing
 
-Create and activate a virtual environment:
+---
 
-```powershell
-python -m venv venv
-.\venv\Scripts\activate
+## 🏗️ Architecture
+
+```
+User
+   │
+   ▼
+Streamlit Frontend
+   │
+   ▼
+FastAPI Backend
+   │
+   ├── YouTube Transcript API
+   │
+   ├── Text Splitter
+   │
+   ├── HuggingFace Embeddings
+   │
+   ├── ChromaDB Vector Store
+   │
+   ├── MMR Retrieval
+   │
+   ▼
+Gemini 2.5 Flash
+   │
+   ▼
+Answer
 ```
 
-Install dependencies:
+---
 
-```powershell
+## 🛠️ Tech Stack
+
+### Frontend
+- Streamlit
+
+### Backend
+- FastAPI
+- Uvicorn
+
+### RAG Pipeline
+- LangChain
+- ChromaDB
+- HuggingFace Embeddings (`sentence-transformers/all-MiniLM-L6-v2`)
+- Recursive Character Text Splitter
+- Maximum Marginal Relevance (MMR)
+
+### LLM
+- Google Gemini 2.5 Flash
+
+### DevOps
+- Docker
+- Docker Compose
+- GitHub Actions
+- Docker Hub
+
+---
+
+## 📂 Project Structure
+
+```
+YouTube_RAG_Assistant
+│
+├── backend/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   └── main.py
+│
+├── frontend/
+│   └── app.py
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── docker-compose.yml
+├── requirements.txt
+├── .dockerignore
+├── .gitignore
+└── README.md
+```
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the project root.
+
+```env
+GOOGLE_API_KEY=YOUR_GEMINI_API_KEY
+```
+
+---
+
+## ▶️ Run Locally
+
+### Clone the repository
+
+```bash
+git clone https://github.com/GauranshChauhan123/YouTube_RAG_Assistant.git
+cd YouTube_RAG_Assistant
+```
+
+### Create virtual environment
+
+```bash
+python -m venv venv
+```
+
+Activate it.
+
+Windows
+
+```bash
+venv\Scripts\activate
+```
+
+Linux/macOS
+
+```bash
+source venv/bin/activate
+```
+
+### Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-Create a `.env` file in the project root:
+---
 
-```env
-GOOGLE_API_KEY=your_google_api_key_here
+### Run FastAPI
+
+```bash
+uvicorn backend.main:app --reload
 ```
 
-## Run
+Runs on
 
-```powershell
-streamlit run app.py
+```
+http://127.0.0.1:8000
 ```
 
-Then open the local URL shown by Streamlit, usually:
+---
 
-```text
+### Run Streamlit
+
+```bash
+streamlit run frontend/app.py
+```
+
+Runs on
+
+```
 http://localhost:8501
 ```
 
-## Usage
+---
 
-1. Paste a YouTube URL or video ID in the sidebar.
-2. Select the transcript/captions language.
-3. Click **Process video**.
-4. Ask a question about the video.
-5. Click **Generate answer**.
+## 🐳 Docker
 
-## Project Structure
+Build and start the application
 
-- `app.py` - Streamlit UI and app flow.
-- `input_transcript.py` - Fetches YouTube transcripts.
-- `split_transcript.py` - Splits transcript text into chunks.
-- `vector_store.py` - Creates the Chroma vector store.
-- `retrieve.py` - Retrieves relevant transcript chunks.
-- `prompt.py` - Builds the LLM prompt.
-- `llm.py` - Calls the Gemini model.
-- `utils.py` - Shared embedding helper.
+```bash
+docker compose up --build
+```
 
-## Notes
+Run in detached mode
 
-- The selected language must be available as captions/transcript for the YouTube video.
-- Generated local data is stored in `chroma_db/`.
-- Secrets and local generated files are ignored by `.gitignore`.
+```bash
+docker compose up -d --build
+```
+
+Stop containers
+
+```bash
+docker compose down
+```
+
+---
+
+## 🔍 API Endpoints
+
+### Health Check
+
+```
+GET /rag/health
+```
+
+### Ask Question
+
+```
+POST /rag/ask
+```
+
+Example Request
+
+```json
+{
+  "video_url": "https://www.youtube.com/watch?v=VIDEO_ID",
+  "question": "What is Retrieval-Augmented Generation?",
+  "language": "English"
+}
+```
+
+---
+
+## 🔄 CI/CD
+
+The project uses **GitHub Actions** for Continuous Integration and Continuous Deployment.
+
+Pipeline includes:
+
+- Install dependencies
+- Create `.env` from GitHub Secrets
+- Build Docker containers
+- Start application using Docker Compose
+- Verify FastAPI health endpoint
+- Verify Streamlit availability
+- Push Docker images to Docker Hub
+
+---
+
+## 🧠 Retrieval Pipeline
+
+1. Extract YouTube transcript
+2. Split transcript into chunks
+3. Generate embeddings
+4. Store vectors in ChromaDB
+5. Retrieve relevant chunks using MMR
+6. Generate answer with Gemini 2.5 Flash
+
+---
+
+
+---
+
+## 🔮 Future Improvements
+
+- Conversation memory
+- Streaming responses
+- Chat history
+- Multiple LLM support
+- Hybrid search
+- Authentication
+- Deployment on cloud
+
+---
+
+## 👨‍💻 Author
+
+**Gauransh Chauhan**
+
+GitHub: https://github.com/GauranshChauhan123
+
+---
+
+## ⭐ If you found this project useful, consider giving it a star!
